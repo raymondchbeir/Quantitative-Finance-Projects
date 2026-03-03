@@ -1,0 +1,10 @@
+[project]
+name = "regime_adaptive_alpha"
+version = "0.1.0"
+description = "Dual-Architecture Intraday Alpha Research Framework"
+authors = [{name="Raymond Chbeir"}]
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
