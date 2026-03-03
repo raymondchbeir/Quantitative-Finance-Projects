@@ -1,0 +1,23 @@
+execution:
+  signal_time: "bar_close"
+  entry_time: "next_bar_open"
+  exit_time: "next_bar_open"
+  allow_overnight: false
+  one_position_per_asset: true
+
+costs:
+  round_trip_bps: 5
+  per_side_bps: 2.5
+  sensitivity_bps: [3, 5, 7]      # run cost sensitivity
+
+validation:
+  static:
+    calibration_start: "2016-01-01"
+    calibration_end: "2019-12-31"
+    oos_start: "2020-01-01"
+    oos_end: "2026-12-31"
+
+  rolling:
+    train_years: 4
+    test_years: 1
+    final_holdout_year: 2026

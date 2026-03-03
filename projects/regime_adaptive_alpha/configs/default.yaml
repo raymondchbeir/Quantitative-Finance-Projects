@@ -1,0 +1,21 @@
+project:
+  name: "regime_adaptive_alpha"
+
+data:
+  start: "2016-01-01"
+  end: "2026-01-30"
+  adjustment: "split"            # Alpaca adjustment policy
+  feed: "sip"                    # sip or iex (your env can override)
+  timezone: "America/New_York"   # canonical timezone for all timestamps
+  include_premarket: true        # store all; filter later in modeling
+
+aggregation:
+  base_timeframe: "1Min"
+  derived_timeframe: "5Min"
+
+storage:
+  raw_path: "data/raw"
+  derived_path: "data/derived"
+  features_path: "data/features"
+  universe_path: "data/universe"
+  reports_path: "reports"

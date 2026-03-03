@@ -1,0 +1,11 @@
+model_a:
+  anchor_symbol: "NVDA"
+  correlation_window_days: 252
+  candidate_pool_size: 250        # how many symbols you *consider* (pull later)
+  active_universe_size: 40        # top-N correlated names you actually trade
+
+model_b:
+  atr_lookback_days: 14
+  top_n_daily: 50
+  min_avg_dollar_volume: 20000000 # liquidity floor (tune later)
+  require_premarket: true         # premarket activity filter
