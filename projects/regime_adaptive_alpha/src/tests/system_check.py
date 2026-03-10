@@ -1,63 +1,63 @@
-# src/tests/system_check.py
+import pandas as pd
 
-import os
-from alpaca.data.requests import StockBarsRequest
-from alpaca.data.timeframe import TimeFrame
-
-from src.config.settings import settings, cfg, client
+from src.config.settings import (
+    PROJECT_NAME,
+    PROJECT_ROOT,
+    RAW_PATH,
+    DERIVED_PATH,
+    FEATURES_PATH,
+    UNIVERSE_PATH,
+    REPORTS_PATH,
+    DATA_START,
+    DATA_END,
+    ADJUSTMENT,
+    FEED,
+    TIMEZONE,
+    BASE_TIMEFRAME,
+    DERIVED_TIMEFRAME,
+    client,
+)
+from src.config.ticker_universe import TICKERS
+from src.data_ingestion.fetch_bars import fetch_minute_bars
 
 
 def run_system_check(
     test_symbol: str = "NVDA",
-    start: str = "2025-12-01",
-    end: str = "2025-12-03",
-    timeframe: TimeFrame = TimeFrame.Minute,
+    start: str = "2024-01-03",
+    end: str = "2024-01-05",
     verbose: bool = True,
 ):
-    """
-    End-to-end check:
-    - settings loads
-    - env vars exist (without printing secrets)
-    - Alpaca client works
-    - small bars pull succeeds
-    Returns the pulled dataframe.
-    """
-
     if verbose:
         print("---- SETTINGS SUMMARY ----")
-        print("Project root:", settings.project_root)
-        print("Repo root:", settings.repo_root)
-        print("Raw path:", settings.raw_path)
-        print("Derived path:", settings.derived_path)
-        print("Data feed:", settings.data_feed)
+        print("Project name:", PROJECT_NAME)
+        print("Project root:", PROJECT_ROOT)
+        print("Raw path:", RAW_PATH)
+        print("Derived path:", DERIVED_PATH)
+        print("Features path:", FEATURES_PATH)
+        print("Universe path:", UNIVERSE_PATH)
+        print("Reports path:", REPORTS_PATH)
+        print("Configured data window:", DATA_START, "to", DATA_END)
+        print("Adjustment:", ADJUSTMENT)
+        print("Feed:", FEED)
+        print("Timezone:", TIMEZONE)
+        print("Base timeframe:", BASE_TIMEFRAME)
+        print("Derived timeframe:", DERIVED_TIMEFRAME)
+        print("Loaded tickers:", len(TICKERS))
+        print("Testing symbol:", test_symbol)
 
-        print("\n---- ENV CHECK ----")
-        print("ALPACA_API_KEY loaded:", os.getenv("ALPACA_API_KEY") is not None)
-        print("ALPACA_SECRET_KEY loaded:", os.getenv("ALPACA_SECRET_KEY") is not None)
-
-        print("\n---- API TEST PULL ----")
-
-    request = StockBarsRequest(
-        symbol_or_symbols=test_symbol,
-        timeframe=timeframe,
-        start=start,
-        end=end,
-        adjustment=cfg["data"]["adjustment"],
-        feed=settings.data_feed,
+    df = fetch_minute_bars(
+        client=client,
+        symbol=test_symbol,
+        start=pd.Timestamp(start),
+        end=pd.Timestamp(end),
     )
 
-    bars = client.get_stock_bars(request).df
-
     if verbose:
-        print("Rows pulled:", len(bars))
-        print("Columns:", list(bars.columns))
-        print("First timestamp:", bars.index.min())
-        print("Last timestamp:", bars.index.max())
+        print("\n---- DATA CHECK ----")
+        if df.empty:
+            print("No data returned.")
+        else:
+            print(f"Pulled {len(df)} rows.")
+            print("Columns:", list(df.columns))
 
-    return bars
-
-
-if __name__ == "__main__":
-    df = run_system_check()
-    print("\nHead:")
-    print(df.head())
+    return df
