@@ -1,0 +1,23 @@
+raw_data_dir: data/raw
+cleaned_data_dir: data/cleaned
+reports_dir: data/reports
+
+market_timezone: America/New_York
+input_bar_minutes: 1
+output_bar_minutes: 5
+
+market_open: "09:30"
+market_close: "16:00"
+premarket_bars: 21
+
+cleaning_policy: strict
+
+strict_rules:
+  allow_missing_bars: 0
+  open_window_bars: 6
+  close_window_bars: 3
+  drop_if_missing_open_window: true
+  drop_if_missing_close_window: false
+  max_consecutive_missing: 0
+  require_no_duplicates: true
+  require_non_null_ohlcv: true
